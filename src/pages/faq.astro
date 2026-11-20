@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, FAQS, PRICING } from '../data/site';
+const groups = [
+  {
+    name: 'Booking & Payment',
+    items: [
+      FAQS[0],
+      FAQS[4],
+      { q: 'What forms of payment do you take?', a: 'Apple Pay, Google Pay and any major card via Stripe — plus Zelle for block deals if you book directly over text. Deposits: $50 for recording, 50% for mix & master. Every cent comes off your final total.' },
+      { q: 'What if I need to cancel or reschedule?', a: 'Free reschedule up to 24 hours before your session — just text us the new time. Inside 24 hours we’ll do everything possible to move you, but the deposit isn’t refundable. No-shows forfeit the deposit. Life happens; we’re human. If your check-in was late because of traffic, text us — we’ve ended more sessions at 1AM than we can count.' },
+      { q: 'Do you offer first-timer deals?', a: `Yes — ${PRICING.firstTimerDiscount} off your first session with code FIRST (auto-applied if you came from our Instagram). Students get $5/hr off Tue–Thu before 6PM with a valid ID.` },
+    ],
+  },
+  {
+    name: 'The Session',
+    items: [
+      FAQS[1],
+      FAQS[2],
+      FAQS[3],
+      { q: 'Can I bring my own engineer or just hang?', a: 'You can bring someone to sit in — up to 6 people total in the room. If you want your own engineer behind the glass, you book the room fee and they patch in free. Honestly though, our engineers will make you sound like you on your best day, so most people say yes to the room chain.' },
+      { q: 'How late do you run?', a: 'Doors open 10AM, last session books till 2AM. After 11PM the rate drops to $28/hr — the late crew gets the room and the rate.' },
+    ],
+  },
+  {
+    name: 'Files & Ownership',
+    items: [
+      FAQS[5],
+      { q: 'What do I actually walk out with?', a: 'Everything: raw tracks, comps, rough mix, and (if booked) the final mix/master as WAV + MP3. We also hand over the session file (PTX) on block deals. Cloud link stays live for 90 days.' },
+      { q: 'Can I record somewhere else and mix with you?', a: 'Absolutely. Send stems (consolidated, same BPM grid, 44.1/48k minimum) with a note on the sound you hear in your head. Mix $150, master $75, or both $199 — delivered in 2–5 days.' },
+    ],
+  },
+];
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: groups.flatMap(g => g.items).map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<BaseLayout
+  title="FAQ | The Signal Room — Pricing, Deposits, Rescheduling & File Ownership"
+  description="Straight answers: studio rates, how the $50 deposit works, rescheduling up to 24h, who can come to the session, and exactly what files you take home."
+  path="/faq"
+  jsonLd={faqLd}
+>
+  <section class="section" style="padding-top:110px">
+    <div class="container">
+      <p class="kicker mono accent">FAQ</p>
+      <h1 class="display" style="font-size:clamp(2.6rem,7vw,5rem)">Everything<br/>you’d <span class="accent">text us.</span></h1>
+      <p class="hero-sub mt-16" style="max-width:52ch">Still have a question? Text <a href={SITE.smsHref} style="color:var(--accent); text-decoration:none">{SITE.phone}</a> — we answer faster than email.</p>
+
+      {groups.map((g) => (
+        <div class="mt-40">
+          <h2 class="mono" style="color:var(--accent); margin-bottom:4px">{g.name}</h2>
+          <div class="faq-list">
+            {g.items.map((f, i) => (
+              <details class="faq" id={g.name.startsWith('Booking') && i === 1 ? 'payment' : undefined}>
+                <summary>{f.q}<span class="plus" aria-hidden="true">+</span></summary>
+                <div class="faq-body"><p>{f.a}</p></div>
+              </details>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      <div class="mt-40">
+        <a class="btn btn-accent" href="/book" data-track="cta_click" data-location="faq-bottom">Enough Q&amp;A — let’s record <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ENGINEERS, SITE } from '../data/site';
+const credits: Record<string, string[]> = {
+  marcus: ['Kaze — “No Ceilings”', 'Rio Pharaoh — “Pressure”', 'Dio — “Brick Season”'],
+  deja: ['Mali Lateef — “Midnight in Pompano”', 'Kaze — “Above the Rim”', 'Lena V. roster — 30+ masters'],
+  trey: ['Rio Pharaoh — “Brick by Brick”', 'Satin Saint — drill sessions', 'Kobi West — booth-basics coaching'],
+};
+---
+<BaseLayout
+  title="Engineers | The Signal Room — Rap, Trap & Drill — Pompano Beach"
+  description="Marcus 'Blade' Bell, Deja Price and Trey Cole. Engineers who actually speak rap: punch-ins, vocal chains, 808 translation and loud, open masters."
+  path="/engineers"
+>
+  <section class="section" style="padding-top:110px">
+    <div class="container">
+      <p class="kicker mono accent">The Engineers</p>
+      <h1 class="display" style="font-size:clamp(2.6rem,7vw,5rem)">They know<br/>the <span class="accent">pocket.</span></h1>
+      <p class="hero-sub mt-16" style="max-width:52ch">Nobody here is learning on your record. Every engineer has hundreds of hours of rap, trap and drill behind the glass — and can hear a bad comp from the next room.</p>
+
+      <div class="eng-grid mt-32" style="grid-template-columns:1fr; gap:20px">
+        {ENGINEERS.map((e) => (
+          <article class="panel" style="display:grid; gap:22px; grid-template-columns:1fr">
+            <div style="display:grid; gap:20px; grid-template-columns:minmax(0,180px) 1fr" class="eng-detail-grid">
+              <picture>
+                <source srcset={e.photo.replace('-480.avif', '-900.avif')} type="image/avif"/>
+                <img src={e.photoFallback.replace('-480.jpg', '-900.jpg')} alt={e.alt} width="480" height="600" loading="lazy" decoding="async" style="border-radius:var(--radius); border:1px solid var(--line); aspect-ratio:4/5; object-fit:cover; width:100%; height:auto"/>
+              </picture>
+              <div>
+                <h2 class="eng-name" style="font-size:clamp(1.6rem,3vw,2.4rem)">{e.name}</h2>
+                <p class="eng-role mt-8">{e.role}</p>
+                <p class="mt-16" style="color:var(--text-dim); max-width:62ch">{e.bio}</p>
+                <p class="mono mt-16" style="color:var(--accent); font-size:11px">{e.specialty}</p>
+                <p class="mono mt-16" style="font-size:10px; color:var(--text-dim)">Selected credits</p>
+                <ul class="price-list" style="gap:6px; margin-top:8px; font-size:14px">{credits[e.id].map(c => <li>{c}</li>)}</ul>
+              </div>
+            </div>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; border-top:1px solid var(--line); padding-top:18px">
+              <a class="btn btn-accent" href={`/book?engineer=${e.id}`} data-track="cta_click" data-location={`engineers-${e.id}`}>Book {e.name.split(' ')[0]} <span class="arrow">→</span></a>
+              <button type="button" class="btn btn-ghost btn-sm reel-btn" data-src={e.id === 'marcus' ? '/audio/pressure-mix.mp3' : e.id === 'deja' ? '/audio/midnight-in-pompano-mix.mp3' : '/audio/brick-by-brick-mix.mp3'} data-label={`${e.name.split(' ')[0]} on ${e.id === 'marcus' ? '“Pressure”' : e.id === 'deja' ? '“Midnight in Pompano”' : '“Brick by Brick”'}`} aria-pressed="false">30s reel</button>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <p class="mono mt-32" style="color:var(--text-dim)">Not sure who? Leave “Any available” on the booking page — we match the engineer to the record, not the other way around. · <a href={SITE.smsHref} style="color:var(--accent)">Text {SITE.phone}</a></p>
+    </div>
+  </section>
+
+  <style>
+    @media (max-width: 640px) {
+      .eng-detail-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</BaseLayout>

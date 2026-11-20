@@ -1,0 +1,294 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, PRICING, TRACKS, ENGINEERS, REVIEWS, FAQS, CREDITS } from '../data/site';
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+const marqueeItems = [...CREDITS, '3M+ streams', SITE.sessions.toLocaleString() + '+ sessions', 'Est. 2019'];
+const videoQuotes = [
+  { img: '/img/room-booth-640.avif', fb: '/img/room-booth-640.jpg', quote: '“Booked at 6, tracked by 8.”', name: 'Kaze', dur: '0:34' },
+  { img: '/img/room-hands-640.avif', fb: '/img/room-hands-640.jpg', quote: '“The chain is real. I felt it.”', name: 'Dio', dur: '0:47' },
+  { img: '/img/room-console-640.avif', fb: '/img/room-console-640.jpg', quote: '“Before/after said everything.”', name: 'Rio Pharaoh', dur: '0:29' },
+];
+---
+<BaseLayout
+  title="Rap Recording Studio in Pompano Beach | The Signal Room — Book Online"
+  description="Pro rap recording, mixing & mastering in Pompano Beach, FL. From $35/hr, block deals, 60-second booking, you own your masters. 4.9 stars · 140+ reviews · 1,200+ sessions."
+  path="/"
+  jsonLd={faqLd}
+  preloadHero={true}
+>
+
+  <!-- ① HERO -->
+  <section class="hero" aria-label="The Signal Room — rap recording studio">
+    <picture class="hero-picture">
+      <source srcset="/img/hero-640.avif 640w, /img/hero-1024.avif 1024w, /img/hero-1672.avif 1672w" sizes="100vw" type="image/avif" />
+      <source srcset="/img/hero-640.webp 640w, /img/hero-1024.webp 1024w, /img/hero-1672.webp 1672w" sizes="100vw" type="image/webp" />
+      <source srcset="/img/hero-1024.jpg 1024w, /img/hero-1672.jpg 1672w" sizes="100vw" type="image/jpeg" />
+      <img class="hero-bg" src="/img/hero-1024.jpg" alt="Artist tracked through the booth glass while the engineer rides the console" width="1672" height="941" fetchpriority="high" decoding="async" />
+    </picture>
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="hero-noise" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <p class="rec-badge" style="align-self:flex-start"><span class="rec-dot" aria-hidden="true"></span>REC · Next open: <span id="nextOpen" style="color:var(--accent)">Tonight 9:00 PM</span></p>
+      <h1 class="display">
+        <span class="line-mask"><span>Your Sound.</span></span>
+        <span class="line-mask"><span><span class="lime">Studio</span> Ready.</span></span>
+      </h1>
+      <p class="hero-sub">Pro rap recording, mixing &amp; mastering in Pompano Beach. <strong>From ${PRICING.hourlyRate}/hr.</strong> You own your masters.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-accent pulse-glow" href="/book" data-track="cta_click" data-location="hero">Book a Session <span class="arrow">→</span></a>
+        <a class="btn btn-ghost" href="#hear" data-track="cta_click" data-location="hero-audio">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M3 1.7v12.6c0 1 1.1 1.6 2 1.1l10-6.3c.8-.5.8-1.7 0-2.2L5 .6c-.9-.5-2 .1-2 1.1z"/></svg>
+          Hear the Work
+        </a>
+      </div>
+      <p class="microcopy">Takes 60 seconds · Free reschedule up to 24h · Deposit from $50</p>
+      <div class="proof-strip" aria-label="Social proof">
+        <span class="proof"><span class="stars" aria-hidden="true">★★★★★</span><span><b>{SITE.rating}</b> ({SITE.reviewCount}+ Google reviews)</span></span>
+        <span class="proof"><b><span data-count={SITE.sessions} data-suffix="+">{SITE.sessions.toLocaleString()}+</span></b>&nbsp;sessions</span>
+        <span class="proof">Credits: <b>&nbsp;{CREDITS.slice(0, 3).join(' · ')}</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② CREDIBILITY MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      {[...marqueeItems, ...marqueeItems].map((item) => (
+        <span class="marquee-item"><em>◆</em>&nbsp; {item}</span>
+      ))}
+    </div>
+  </div>
+
+  <!-- ③ HEAR THE DIFFERENCE -->
+  <section class="section" id="hear" aria-labelledby="hear-h">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="kicker mono accent">Before / After</p>
+          <h2 class="display" id="hear-h">Hear the<br/>difference.</h2>
+        </div>
+        <p class="text-dim" style="max-width:36ch; font-size:15px">Same take, untouched vs. through the chain. Tap <b style="color:var(--text)">RAW</b>, then <b style="color:var(--accent)">MIXED</b>. Audio loads only when you press play.</p>
+      </div>
+      <div class="ba-grid">
+        {TRACKS.slice(0, 3).map((t) => (
+          <article class="ba-card reveal" data-before={`/audio/${t.id}-raw.mp3`} data-after={`/audio/${t.id}-mix.mp3`} data-title={t.title}>
+            <div class="ba-top">
+              <div>
+                <h3 class="ba-title">{t.title}</h3>
+                <p class="ba-artist">{t.artist} · {t.engineer}</p>
+              </div>
+              <div class="ba-toggle" role="group" aria-label={`Raw vs mixed for ${t.title}`}>
+                <button type="button" data-mode="raw" aria-pressed="false">Raw</button>
+                <button type="button" data-mode="mix" aria-pressed="true">Mixed</button>
+              </div>
+            </div>
+            <div class="wave-wrap" aria-hidden="true">
+              <div class="wave-bars wave-base"></div>
+              <div class="wave-fill"><div class="wave-bars"></div></div>
+            </div>
+            <div class="ba-controller">
+              <button class="play-btn" type="button" aria-label={`Play ${t.title} (mixed)`}>
+                <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.1v13.8c0 1.1 1.2 1.8 2.2 1.2l10.8-6.9c.9-.5.9-1.9 0-2.4L10.2 3.9C9.2 3.3 8 4 8 5.1z"/></svg>
+                <svg class="icon-pause" viewBox="0 0 24 24" hidden aria-hidden="true"><rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/></svg>
+              </button>
+              <span class="ba-time">0:00 / 0:36</span>
+              <span class="ba-note" style="margin-left:auto">Vocals → Mix
+              </span>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ HOW IT WORKS -->
+  <section class="section" style="background:var(--surface); border-block:1px solid var(--line)" aria-labelledby="how-h">
+    <div class="container">
+      <p class="kicker mono accent">How it works</p>
+      <h2 class="display" id="how-h" style="margin-bottom:36px">Three steps.<br/>Zero runaround.</h2>
+      <div class="steps">
+        <div class="step reveal"><span class="step-num">01</span><h3>Pick a time</h3><p>Quick-pick tonight or tomorrow, or browse two weeks out. Real availability, no “we’ll get back to you.”</p></div>
+        <div class="step reveal" style="transition-delay:60ms"><span class="step-num">02</span><h3>Pay the deposit</h3><p>$50 holds recording sessions (50% for mix &amp; master). Apple Pay, Google Pay or card. It comes off your total.</p></div>
+        <div class="step reveal" style="transition-delay:120ms"><span class="step-num">03</span><h3>Show up &amp; record</h3><p>Beats on your drive, IDs ready. We handle the chain, the comp and the rough mix. Files delivered same day.</p></div>
+      </div>
+      <div class="mt-32">
+        <a class="btn btn-accent" href="/book" data-track="cta_click" data-location="how-it-works">Book Your Slot <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑤ THE ROOM -->
+  <section class="section" aria-labelledby="room-h">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="kicker mono accent">The Room</p>
+          <h2 class="display" id="room-h">Not a clinic.<br/>A <span class="accent">studio.</span></h2>
+        </div>
+        <a class="btn btn-ghost btn-sm" href="/studio">See gear list <span class="arrow">→</span></a>
+      </div>
+      <div class="gallery" aria-label="Photos of the studio">
+        <figure><picture><source srcset="/img/room-booth-640.avif 640w, /img/room-booth-1280.avif 1280w" type="image/avif" sizes="(min-width:1100px) 32vw, (min-width:700px) 46vw, 78vw"/><img src="/img/room-booth-640.jpg" alt="Vocal booth with condenser mic, wood and foam, lime light strip" width="640" height="800" loading="lazy" decoding="async"/></picture><figcaption><span>01 · The Booth</span><span>Isolated · foam-tuned</span></figcaption></figure>
+        <figure><picture><source srcset="/img/room-console-640.avif 640w, /img/room-console-1280.avif 1280w" type="image/avif" sizes="(min-width:1100px) 32vw, (min-width:700px) 46vw, 78vw"/><img src="/img/room-console-640.jpg" alt="44-channel console, outboard compressors and nearfield monitors" width="640" height="427" loading="lazy" decoding="async"/></picture><figcaption><span>02 · The Console</span><span>44ch · outboard chain</span></figcaption></figure>
+        <figure><picture><source srcset="/img/room-hands-640.avif 640w, /img/room-hands-1280.avif 1280w" type="image/avif" sizes="(min-width:1100px) 32vw, (min-width:700px) 46vw, 78vw"/><img src="/img/room-hands-640.jpg" alt="Engineer's hands riding a fader on the console" width="640" height="427" loading="lazy" decoding="async"/></picture><figcaption><span>03 · The Chain</span><span>UA 1176 · LA-2A · Pultec</span></figcaption></figure>
+        <figure><picture><source srcset="/img/room-lounge-640.avif 640w, /img/room-lounge-1280.avif 1280w" type="image/avif" sizes="(min-width:1100px) 32vw, (min-width:700px) 46vw, 78vw"/><img src="/img/room-lounge-640.jpg" alt="Studio lounge with leather couch and vinyl wall" width="640" height="427" loading="lazy" decoding="async"/></picture><figcaption><span>04 · The Lounge</span><span>Crew corner · vinyl wall</span></figcaption></figure>
+      </div>
+      <ul class="mono mt-24" style="list-style:none; padding:0; display:flex; flex-wrap:wrap; gap:10px 22px; color:var(--text-dim)">
+        <li>▸ AT4047 / TLM 103 chain</li><li>▸ KRK Rokit 8 G4 monitors</li><li>▸ 1176 + LA-2A vocal chain</li><li>▸ Pro Tools · Ableton · Logic</li><li>▸ 3 engineers who speak rap</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ⑥ PRICING SNAPSHOT -->
+  <section class="section" style="background:var(--surface); border-block:1px solid var(--line)" aria-labelledby="price-h">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="kicker mono accent">Rates</p>
+          <h2 class="display" id="price-h">Straight<br/>pricing.</h2>
+        </div>
+        <a class="mono" style="text-decoration:none; color:var(--accent)" href="/pricing">Full pricing &amp; add-ons →</a>
+      </div>
+      <div class="price-grid">
+        <div class="price-card reveal">
+          <p class="price-name">Hourly</p>
+          <p class="price-big">${PRICING.hourlyRate}<small>/hr</small></p>
+          <p class="price-sub">2-hour minimum · late night (after 11PM) ${PRICING.lateNightRate}/hr</p>
+          <ul class="price-list"><li>1 engineer + full chain</li><li>Comped vocals rough-mixed</li><li>Same-day file delivery</li></ul>
+          <a class="btn btn-ghost" href="/book" data-track="cta_click" data-location="pricing-hourly">Book Hourly <span class="arrow">→</span></a>
+        </div>
+        <div class="price-card featured reveal" style="transition-delay:60ms">
+          <span class="tag">Most Booked</span>
+          <p class="price-name">Block · 10 Hours</p>
+          <p class="price-big">${PRICING.blockPrice}<small> total</small></p>
+          <p class="price-save">Save ${PRICING.blockSave} vs hourly</p>
+          <ul class="price-list"><li>10 hrs of tracking, split however you want</li><li>Priority weekend slots</li><li>Unused hours never expire*</li></ul>
+          <a class="btn btn-accent" href="/book?session=block" data-track="cta_click" data-location="pricing-block">Lock In Your Hours <span class="arrow">→</span></a>
+        </div>
+        <div class="price-card reveal" style="transition-delay:120ms">
+          <p class="price-name">Mix &amp; Master</p>
+          <p class="price-big">${PRICING.mixMasterPrice}<small>/song</small></p>
+          <p class="price-sub">Mix ${PRICING.mixPrice} · Master ${PRICING.masterPrice} · stems required</p>
+          <ul class="price-list"><li>2 revision rounds included</li><li>Loudness to platform targets</li><li>2–5 day turnaround</li></ul>
+          <a class="btn btn-ghost" href="/book?session=mix" data-track="cta_click" data-location="pricing-mix">Send Your Stems <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <p class="microcopy mt-16">*Within 6 months of first session · First-timers: $25 off with code FIRST (auto-applied from IG)</p>
+    </div>
+  </section>
+
+  <!-- ⑦ SOCIAL PROOF WALL -->
+  <section class="section" aria-labelledby="proof-h">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="kicker mono accent">Receipts</p>
+          <h2 class="display" id="proof-h">Don’t take<br/>our word.</h2>
+        </div>
+        <p class="mono" style="color:var(--text-dim)">{SITE.streams} streams from TSR sessions</p>
+      </div>
+      <div class="grid-2 mt-8" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:12px; margin-bottom:22px">
+        {videoQuotes.map((v) => (
+          <a class="work-tile" style="text-decoration:none" href={SITE.instagram} rel="noopener" data-track="dm_click" data-location="video-testimonial" aria-label={`Watch ${v.name} on Instagram`}>
+            <span class="work-art" style="aspect-ratio:9/14">
+              <picture><source srcset={v.img} type="image/avif"/><img src={v.fb} alt={`${v.name} on camera in the studio`} width="320" height="498" loading="lazy" decoding="async" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.62"/></picture>
+              <span class="mono">{v.dur} · IG Reel</span>
+              <span class="work-play" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.1v13.8c0 1.1 1.2 1.8 2.2 1.2l10.8-6.9c.9-.5.9-1.9 0-2.4L10.2 3.9C9.2 3.3 8 4 8 5.1z"/></svg></span>
+            </span>
+            <span class="work-body"><b>{v.quote}</b><span>{v.name} · watch on IG →</span></span>
+          </a>
+        ))}
+      </div>
+      <div class="review-grid">
+        {REVIEWS.map((r) => (
+          <blockquote class="review reveal">
+            <span class="stars" aria-label="5 out of 5 stars">★★★★★</span>
+            <p>{r.text}</p>
+            <footer><span class="avatar" aria-hidden="true">{r.initials}</span><span><cite>{r.name}</cite><span>{r.handle} · {r.track}</span></span></footer>
+          </blockquote>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑧ ENGINEERS PREVIEW -->
+  <section class="section" style="border-top:1px solid var(--line)" aria-labelledby="eng-h">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="kicker mono accent">The Engineers</p>
+          <h2 class="display" id="eng-h">They know<br/>the pocket.</h2>
+        </div>
+        <a class="mono" style="text-decoration:none; color:var(--accent)" href="/engineers">All engineers &amp; reels →</a>
+      </div>
+      <div class="eng-grid">
+        {ENGINEERS.map((e) => (
+          <article class="eng-card reveal">
+            <picture>
+              <source srcset={e.photo} type="image/avif"/>
+              <img class="eng-photo" src={e.photoFallback} alt={e.alt} width="480" height="600" loading="lazy" decoding="async"/>
+            </picture>
+            <div class="eng-body">
+              <h3 class="eng-name">{e.name}</h3>
+              <p class="eng-role">{e.role}</p>
+              <p class="eng-bio">{e.specialty}</p>
+              <a class="btn btn-ghost btn-sm" href={`/book?engineer=${e.id}`} data-track="cta_click" data-location={`engineer-${e.id}`}>Book {e.name.split(' ')[0]} <span class="arrow">→</span></a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑨ RISK REVERSAL -->
+  <div class="container" style="padding-bottom:8px">
+    <div class="risk-strip" aria-label="Our promises">
+      <div class="risk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6l7-3z"/><path d="M9.5 12l2 2 3.5-4"/></svg><b>You own your masters</b><span>Always. In writing on every invoice.</span></div>
+      <div class="risk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4.5 13.5H11L9.5 22 18 10.5h-6.5L13 2z"/></svg><b>Files same day</b><span>Stems, roughs &amp; finals via private link.</span></div>
+      <div class="risk"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"/></svg><b>Free reschedule · 24h</b><span>Life happens. Move it once, fee-free.</span></div>
+      <div class="risk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8l8-5 8 5-8 5-8-5z"/><path d="M4 8v8l8 5 8-5V8"/></svg><b>No hidden fees</b><span>Total shown before you pay. Ever.</span></div>
+    </div>
+  </div>
+
+  <!-- ⑩ FAQ -->
+  <section class="section" aria-labelledby="faq-h">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="kicker mono accent">Questions</p>
+          <h2 class="display" id="faq-h">Asked every<br/>day. Answered.</h2>
+        </div>
+        <a class="mono" style="text-decoration:none; color:var(--accent)" href="/faq">All FAQs →</a>
+      </div>
+      <div class="faq-list">
+        {FAQS.map((f, i) => (
+          <details class="faq" id={i === 4 ? 'payment' : undefined}>
+            <summary>{f.q}<span class="plus" aria-hidden="true">+</span></summary>
+            <div class="faq-body"><p>{f.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑪ FINAL CTA -->
+  <section class="final-cta" aria-labelledby="cta-h">
+    <p class="kicker mono accent" style="justify-content:center">Last call</p>
+    <h2 class="display" id="cta-h">Ready to<br/><span class="accent">record?</span></h2>
+    <p class="text-dim mt-16" style="max-width:44ch; margin-inline:auto">The room’s warm, the chain is dialed, and your next take is the one. Book in 60 seconds.</p>
+    <div class="hero-ctas mt-24" style="justify-content:center">
+      <a class="btn btn-accent pulse-glow" href="/book" data-track="cta_click" data-location="final-band">Book a Session <span class="arrow">→</span></a>
+      <a class="btn btn-ghost" href={SITE.instagram} rel="noopener" data-track="dm_click" data-location="final-band">DM us on IG</a>
+      <a class="btn btn-ghost" href={SITE.smsHref} data-track="text_click" data-location="final-band">Text {SITE.phone}</a>
+    </div>
+  </section>
+</BaseLayout>

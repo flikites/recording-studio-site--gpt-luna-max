@@ -1,0 +1,51 @@
+---
+import { SITE, FAQS } from '../data/site';
+const year = new Date().getFullYear();
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map(f => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+void faqLd; // FAQ schema is emitted on /faq (and home, which shows the same Q&A)
+---
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="/" style="text-decoration:none; margin-bottom:14px;" aria-label="The Signal Room — home">
+          <svg class="brand-badge" viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="5" fill="#D4FF3A"/>
+            <rect x="7" y="13" width="3.4" height="6" rx="1" fill="#0A0A0B"/>
+            <rect x="13.2" y="9" width="3.4" height="14" rx="1" fill="#0A0A0B"/>
+            <rect x="19.4" y="12" width="3.4" height="8" rx="1" fill="#0A0A0B"/>
+            <circle cx="26" cy="10.5" r="1.6" fill="#0A0A0B"/>
+          </svg>
+          <span>The&nbsp;Signal<br/>Room</span>
+        </a>
+        <p class="text-dim" style="font-size:14px; margin-top:12px; max-width:34ch;">{SITE.address}</p>
+        <p class="mono mt-16" style="color:var(--accent)">Open late · {SITE.hours.split('·')[1].trim()}</p>
+      </div>
+      <nav aria-label="Explore">
+        <h3>Explore</h3>
+        <p><a href="/work">Work</a><br/><a href="/studio">The Studio &amp; Gear</a><br/><a href="/pricing">Pricing</a><br/><a href="/engineers">Engineers</a><br/><a href="/faq">FAQ</a></p>
+      </nav>
+      <nav aria-label="Book">
+        <h3>Book</h3>
+        <p><a href="/book">Book a Session</a><br/><a href={SITE.smsHref}>Text {SITE.phone}</a><br/><a href={`mailto:${SITE.email}`}>{SITE.email}</a><br/><a href={SITE.instagram} rel="me noopener">{SITE.instagramHandle} (IG)</a></p>
+      </nav>
+      <div>
+        <h3>Find us</h3>
+        <p><a href={SITE.mapsLink} rel="noopener">Get directions →</a><br/><span class="text-dim" style="font-size:13px; display:inline-block; margin-top:8px;">Free parking behind the building. Buzzer #7 on the north door.</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© {year} The Signal Room LLC · Pompano Beach, FL</span>
+      <span><a href="/terms">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/faq#payment">Refunds &amp; Deposits</a></span>
+      <span>You own your masters. Always.</span>
+    </div>
+  </div>
+</footer>

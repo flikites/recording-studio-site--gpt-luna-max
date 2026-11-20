@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../data/site';
+---
+<BaseLayout title="Privacy | The Signal Room" description="What we collect, why, and what we never do with it. Plain-language privacy notice." path="/privacy">
+  <section class="section" style="padding-top:110px">
+    <div class="container" style="max-width:820px">
+      <p class="kicker mono accent">Privacy</p>
+      <h1 class="display" style="font-size:clamp(2rem,5vw,3.5rem)">Short version:<br/><span class="accent">we don’t sell you.</span></h1>
+      <div class="mt-32" style="display:grid; gap:26px; color:var(--text-dim); font-size:16px">
+        <div><h2 style="color:var(--text); font-size:19px; margin-bottom:6px">What we collect</h2><p>Name, phone, email and session preferences you type into the booking form. Payment details are handled entirely by Stripe — we never see or store card numbers.</p></div>
+        <div><h2 style="color:var(--text); font-size:19px; margin-bottom:6px">Why</h2><p>To hold your slot, send the address and door code, deliver files, and follow up on an unfinished booking (only if you ticked the SMS consent box). That’s it.</p></div>
+        <div><h2 style="color:var(--text); font-size:19px; margin-bottom:6px">What we never do</h2><p>Sell your data, rent lists, add you to marketing you didn’t ask for, or share your unreleased music with anyone. Unreleased music stays in the room and on our encrypted drive — deleted on request.</p></div>
+        <div><h2 style="color:var(--text); font-size:19px; margin-bottom:6px">Your rights</h2><p>Text or email {SITE.email} to see, correct or delete everything we have about you. We respond within 72 hours.</p></div>
+        <div><h2 style="color:var(--text); font-size:19px; margin-bottom:6px">Analytics</h2><p>Privacy-first, cookieless analytics (Plausible-style) plus optional Meta/TikTok pixels that only load after your first interaction. No cross-site tracking, no ad resale.</p></div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

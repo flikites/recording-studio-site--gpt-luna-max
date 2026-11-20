@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../data/site';
+---
+<BaseLayout
+  title="Contact | The Signal Room — Pompano Beach, FL · (954) 555-0134"
+  description="The Signal Room: 2811 NE 33rd Street, Suite 7, Pompano Beach, FL 33064. Free parking. Text (954) 555-0134, DM @thesignalroom.studio, or book online."
+  path="/contact"
+>
+  <section class="section" style="padding-top:110px">
+    <div class="container">
+      <p class="kicker mono accent">Contact</p>
+      <h1 class="display" style="font-size:clamp(2.6rem,7vw,5rem)">Come <span class="accent">through.</span></h1>
+
+      <div class="split mt-32" style="align-items:start">
+        <div>
+          <div class="panel" style="padding:0; overflow:hidden">
+            <!-- Schematic street map — static, zero external requests. Links to Google Maps. -->
+            <a href={SITE.mapsLink} rel="noopener" aria-label="Open this location in Google Maps" style="display:block">
+              <svg viewBox="0 0 640 400" role="img" aria-label="Schematic map: The Signal Room on NE 33rd Street between Powerline Road and N Federal Highway" style="width:100%; height:auto; background:#101013">
+                <rect width="640" height="400" fill="#101013"/>
+                <!-- water (Intracoastal) -->
+                <path d="M470 -20 C 520 90, 560 140, 700 210 L 700 -20 Z" fill="#141a1c"/>
+                <text x="520" y="60" fill="#3a4a4d" font-size="11" font-family="ui-monospace, monospace">INTRACOASTAL</text>
+                <!-- I-95 -->
+                <rect x="60" y="0" width="34" height="400" fill="#1b1b20"/>
+                <line x1="77" y1="0" x2="77" y2="400" stroke="#33333c" stroke-width="2" stroke-dasharray="10 8"/>
+                <text x="30" y="385" fill="#6f6f78" font-size="12" font-family="ui-monospace, monospace" transform="rotate(-90 30 385)">I-95</text>
+                <!-- N Federal Hwy -->
+                <rect x="160" y="0" width="18" height="400" fill="#18181c"/>
+                <text x="150" y="380" fill="#6f6f78" font-size="11" font-family="ui-monospace, monospace" transform="rotate(-90 150 380)">N FEDERAL HWY</text>
+                <!-- Powerline Rd -->
+                <rect x="330" y="0" width="18" height="400" fill="#18181c"/>
+                <text x="322" y="380" fill="#6f6f78" font-size="11" font-family="ui-monospace, monospace" transform="rotate(-90 322 380)">POWERLINE RD</text>
+                <!-- Atlantic Blvd -->
+                <rect x="0" y="258" width="640" height="34" fill="#1b1b20"/>
+                <line x1="0" y1="275" x2="640" y2="275" stroke="#33333c" stroke-width="2" stroke-dasharray="12 9"/>
+                <text x="12" y="249" fill="#8a8a93" font-size="12" font-family="ui-monospace, monospace">W ATLANTIC BLVD</text>
+                <!-- NE 33rd St -->
+                <rect x="0" y="120" width="640" height="12" fill="#22222a"/>
+                <text x="12" y="112" fill="#c9c9cf" font-size="12" font-family="ui-monospace, monospace">NE 33RD ST</text>
+                <!-- side streets -->
+                <line x1="240" y1="120" x2="240" y2="258" stroke="#22222a" stroke-width="8"/>
+                <line x1="420" y1="120" x2="420" y2="258" stroke="#22222a" stroke-width="8"/>
+                <!-- studio block highlight -->
+                <rect x="236" y="104" width="44" height="44" fill="#D4FF3A" fill-opacity="0.12" stroke="#D4FF3A" stroke-opacity="0.5"/>
+                <!-- pin -->
+                <g transform="translate(258 96)">
+                  <circle r="17" fill="#D4FF3A">
+                    <animate attributeName="r" values="15;20;15" dur="2.4s" repeatCount="indefinite"/>
+                    <animate attributeName="fill-opacity" values="1;0.75;1" dur="2.4s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle r="6.5" cy="-1" fill="#0A0A0B"/>
+                  <path d="M -9 4 L 0 19 L 9 4 Z" fill="#D4FF3A"/>
+                </g>
+                <text x="284" y="92" fill="#F4F2EC" font-size="13" font-weight="700" font-family="Archivo, Arial, sans-serif">THE SIGNAL ROOM</text>
+                <text x="284" y="110" fill="#A3A3AB" font-size="10" font-family="ui-monospace, monospace">2811 NE 33RD ST · STE 7</text>
+                <!-- north arrow -->
+                <g transform="translate(606 30)" stroke="#A3A3AB" stroke-width="2" fill="none">
+                  <path d="M0 12 L0 -10 M-6 -2 L0 -12 L6 -2" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+              </svg>
+              <span class="mono" style="display:block; padding:12px 16px; color:var(--accent)">Open in Google Maps →</span>
+            </a>
+          </div>
+        </div>
+
+        <div style="display:grid; gap:16px">
+          <div class="panel">
+            <p class="kicker mono accent" style="margin-bottom:10px">Text us (fastest)</p>
+            <a class="display" style="font-size:clamp(1.6rem,4vw,2.4rem); text-decoration:none; color:var(--text)" href={SITE.smsHref}>{SITE.phone}</a>
+            <p class="text-dim mt-8">10AM–2AM, every day. “Record or nah?” is a valid text.</p>
+          </div>
+          <div class="panel">
+            <p class="kicker mono accent" style="margin-bottom:10px">DM us</p>
+            <a class="display" style="font-size:clamp(1.4rem,4vw,2rem); text-decoration:none; color:var(--text); word-break:break-word" href={SITE.instagram} rel="noopener">{SITE.instagramHandle}</a>
+            <p class="text-dim mt-8">Send a voice memo of what you’re working on — we listen to everything.</p>
+          </div>
+          <div class="panel">
+            <p class="kicker mono accent" style="margin-bottom:10px">Email</p>
+            <a href={`mailto:${SITE.email}`} style="color:var(--text); font-weight:700; text-decoration:none">{SITE.email}</a>
+            <p class="text-dim mt-8">For stems &amp; session files. Average reply: same day.</p>
+          </div>
+          <div class="panel">
+            <p class="kicker mono accent" style="margin-bottom:10px">The address</p>
+            <p style="font-weight:700">{SITE.address}</p>
+            <p class="text-dim mt-8">{SITE.hours}<br/>Free parking behind the building · Buzzer #7 · North door</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
