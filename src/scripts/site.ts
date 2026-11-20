@@ -391,7 +391,7 @@ if (wizard) {
 
   /* --- summary --- */
   const setText = (id: string, v: string) => { const el = qs<HTMLElement>('#' + id); if (el) el.textContent = v; };
-  const sync = () => {
+  const sync = (shouldScroll = true) => {
     // option cards
     qsa<HTMLInputElement>('input[name="session"]').forEach((r) => { (r.closest('.option-card') as HTMLElement)?.classList.toggle('checked', r.checked); });
     // hours row only for hourly
@@ -421,7 +421,7 @@ if (wizard) {
     qsa<HTMLElement>('.wizard-step').forEach((s) => s.classList.toggle('active', Number(s.dataset.step) === state.step));
     const stepLabel = qs<HTMLElement>('#stepLabel');
     if (stepLabel) stepLabel.textContent = `Step ${state.step} of 3`;
-    window.scrollTo({ top: Math.max(0, wizard.offsetTop - 70), behavior: reduced ? 'auto' : 'smooth' });
+    if (shouldScroll) window.scrollTo({ top: Math.max(0, wizard.offsetTop - 70), behavior: reduced ? 'auto' : 'smooth' });
   };
 
   /* --- step 1: session options --- */
@@ -512,7 +512,7 @@ if (wizard) {
   };
 
   const showConfirmation = (ref: string, via: 'demo' | 'stripe') => {
-    wizard.querySelectorAll('.wizard-step, .progress, .step-dots, #preConfirm').forEach((el) => ((el as HTMLElement).style.display = 'none'));
+    wizard.querySelectorAll('.wizard-step, .progress, .step-dots').forEach((el) => ((el as HTMLElement).style.display = 'none'));
     const confirmBox = qs<HTMLElement>('#confirmPanel')!;
     confirmBox.hidden = false;
     const when = slotDate();
@@ -550,7 +550,7 @@ if (wizard) {
   });
 
   /* init */
-  renderQuickPicks(); renderDays(); renderSlots(); sync();
+  renderQuickPicks(); renderDays(); renderSlots(); sync(false);
 }
 
 /* ---------- FAQ open tracking ---------- */
