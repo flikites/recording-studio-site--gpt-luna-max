@@ -1,0 +1,45 @@
+---
+import { SITE } from '../data/site';
+const path = Astro.url.pathname;
+const links = [
+  { href: '/work', label: 'Work' },
+  { href: '/studio', label: 'Studio' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/engineers', label: 'Engineers' },
+];
+---
+<header class="site-header" id="siteHeader">
+  <div class="container">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="The Signal Room — home">
+        <svg class="brand-badge" viewBox="0 0 32 32" role="img" aria-hidden="true">
+          <rect width="32" height="32" rx="5" fill="#D4FF3A"/>
+          <rect x="7" y="13" width="3.4" height="6" rx="1" fill="#0A0A0B"/>
+          <rect x="13.2" y="9" width="3.4" height="14" rx="1" fill="#0A0A0B"/>
+          <rect x="19.4" y="12" width="3.4" height="8" rx="1" fill="#0A0A0B"/>
+          <circle cx="26" cy="10.5" r="1.6" fill="#0A0A0B"/>
+        </svg>
+        <span>The&nbsp;Signal<br/>Room</span>
+      </a>
+      <ul class="nav-links">
+        {links.map(l => (
+          <li><a href={l.href} aria-current={path === l.href || path.startsWith(l.href + '/') ? 'page' : undefined}>{l.label}</a></li>
+        ))}
+      </ul>
+      <a class="btn btn-accent btn-sm nav-cta" href="/book">Book Session <span class="arrow">→</span></a>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu" aria-label="Toggle menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <line x1="4" y1="8" x2="20" y2="8" class="mline m1"/>
+          <line x1="4" y1="16" x2="20" y2="16" class="mline m2"/>
+        </svg>
+      </button>
+    </nav>
+  </div>
+  <div class="mobile-menu" id="mobileMenu" hidden>
+    <a href="/book">Book a Session</a>
+    {links.map(l => (<a href={l.href}>{l.label}</a>))}
+    <a href="/faq">FAQ</a>
+    <a href="/contact">Contact</a>
+    <span class="mono">Text us: <a href={SITE.smsHref} style="display:inline;padding:0;border:0;font-size:13px">{SITE.phone}</a></span>
+  </div>
+</header>

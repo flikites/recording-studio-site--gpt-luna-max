@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE, REVIEWS, TRACKS } from '../../data/site';
+---
+<BaseLayout
+  title="First Session? $25 Off | The Signal Room — Pompano Beach"
+  description="New here? $25 off your first studio session at The Signal Room. Pro rap recording from $35/hr. Sound like yourself — only engineered. Code FIRST."
+  path="/lp/first-session"
+>
+  <div class="offer-strip">IG Exclusive · $25 off your first session · code FIRST · auto-applied at checkout</div>
+  <section class="lp-hero">
+    <picture>
+      <source srcset="/img/hero-1024.avif 1024w, /img/hero-1672.avif 1672w" sizes="100vw" type="image/avif" />
+      <img src="/img/hero-1024.jpg" alt="Recording session in progress at The Signal Room" width="1672" height="941" fetchpriority="high" decoding="async" />
+    </picture>
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="lp-inner">
+      <p class="rec-badge" style="margin-bottom:14px"><span class="rec-dot" aria-hidden="true"></span>REC · Next open: <span id="nextOpen" style="color:var(--accent)">Tonight 9:00 PM</span></p>
+      <h1 class="display" style="font-size:clamp(3rem,11vw,6rem)">First<br/>session?<br/><span class="accent">$25 off.</span></h1>
+      <p class="hero-sub mt-16" style="max-width:38ch">Pro rap recording, mixing &amp; mastering. From $35/hr, $25 off your first booking, files same day. You own your masters.</p>
+      <div class="hero-ctas mt-24">
+        <a class="btn btn-accent pulse-glow" href="/book?offer=first" data-track="cta_click" data-location="lp-first-session" style="min-height:60px; font-size:17px">Claim $25 off — book now <span class="arrow">→</span></a>
+        <a class="btn btn-ghost" href={SITE.smsHref} data-track="text_click" data-location="lp-first-session">Text {SITE.phone}</a>
+      </div>
+      <p class="microcopy mt-8">Code FIRST auto-applies · Deposit $50 (goes toward your total) · Free reschedule ≥ 24h</p>
+      <div class="proof-strip"><span class="proof"><span class="stars">★★★★★</span><span><b>{SITE.rating}</b> · {SITE.reviewCount}+ reviews</span></span><span class="proof"><b><span data-count={SITE.sessions} data-suffix="+">{SITE.sessions.toLocaleString()}+</span></b> sessions</span></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:56px">
+    <div class="container">
+      <p class="kicker mono accent">Hear it live</p>
+      <h2 class="display" style="font-size:clamp(1.8rem,5vw,3rem); margin-bottom:20px">Before. After.<br/>Yours next.</h2>
+      <div class="ba-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))">
+        {TRACKS.slice(0, 3).map((t) => (
+          <article class="ba-card" data-before={`/audio/${t.id}-raw.mp3`} data-after={`/audio/${t.id}-mix.mp3`} data-title={t.title}>
+            <div class="ba-top">
+              <div><h3 class="ba-title">{t.title}</h3><p class="ba-artist">{t.artist}</p></div>
+              <div class="ba-toggle" role="group" aria-label={`Raw vs mixed for ${t.title}`}>
+                <button type="button" data-mode="raw" aria-pressed="false">Raw</button>
+                <button type="button" data-mode="mix" aria-pressed="true">Mixed</button>
+              </div>
+            </div>
+            <div class="wave-wrap" aria-hidden="true"><div class="wave-bars wave-base"></div><div class="wave-fill"><div class="wave-bars"></div></div></div>
+            <div class="ba-controller">
+              <button class="play-btn" type="button" aria-label={`Play ${t.title}`}>
+                <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.1v13.8c0 1.1 1.2 1.8 2.2 1.2l10.8-6.9c.9-.5.9-1.9 0-2.4L10.2 3.9C9.2 3.3 8 4 8 5.1z"/></svg>
+                <svg class="icon-pause" viewBox="0 0 24 24" hidden aria-hidden="true"><rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/></svg>
+              </button>
+              <span class="ba-time">0:00 / 0:36</span>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div class="review-grid mt-32" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+        {REVIEWS.slice(0, 2).map((r) => (
+          <blockquote class="review"><span class="stars">★★★★★</span><p>{r.text}</p><footer><span class="avatar">{r.initials}</span><span><cite>{r.name}</cite><span>{r.handle}</span></span></footer></blockquote>
+        ))}
+      </div>
+
+      <div class="mt-32 center">
+        <a class="btn btn-accent pulse-glow" href="/book?offer=first" data-track="cta_click" data-location="lp-first-session-bottom" style="min-height:60px; font-size:17px">Claim my $25 off <span class="arrow">→</span></a>
+        <p class="microcopy mt-8">60 seconds · No account · Free reschedule 24h</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, PRICING } from '../data/site';
+const offers = [
+  { name: 'Tracking — Hourly', detail: 'Engineer + chain + Pro Tools session', price: `$${PRICING.hourlyRate}/hr`, note: '2-hour minimum', cta: '/book', label: 'Book' },
+  { name: 'Block Deal — 10 Hours', detail: 'Split across days within 6 months', price: `$${PRICING.blockPrice}`, note: `Save $${PRICING.blockSave}`, cta: '/book?session=block', label: 'Lock In' },
+  { name: 'Late Night — after 11PM', detail: 'Same room, lower rack rate', price: `$${PRICING.lateNightRate}/hr`, note: 'min 2 hrs', cta: '/book', label: 'Book Late' },
+  { name: 'Mix — per song', detail: '20–40 channels, 2 revision rounds', price: `$${PRICING.mixPrice}`, note: 'stems required', cta: '/book?session=mix', label: 'Start Mix' },
+  { name: 'Master — per song', detail: 'Loudness to platform specs, vinyl/DDP on request', price: `$${PRICING.masterPrice}`, note: '2 revision rounds', cta: '/book?session=mix', label: 'Add Master' },
+  { name: 'Mix + Master bundle', detail: 'The full treatment, one invoice', price: `$${PRICING.mixMasterPrice}`, note: 'Save $26', cta: '/book?session=mix', label: 'Bundle It' },
+] as const;
+const addons = [
+  ['Engineer-only (bring your projects)', `$${PRICING.engineerOnlyRate}/hr`],
+  ['Vocal tuning / Melodyne pass', '$40 / song'],
+  ['Comping & editing (per rough)', '$30'],
+  ['Beat lease (tagged file + license)', 'from $50'],
+  ['Extra revision round (beyond 2)', '$25'],
+  ['Rush delivery (under 48h)', '+20%'],
+  ['Extra mic setup (duo/group vocals)', 'Included'],
+  ['Session file handoff (PTX + stems)', 'Included'],
+] as const;
+---
+<BaseLayout
+  title="Studio Rates & Block Deals | The Signal Room — Pompano Beach"
+  description="Transparent pricing: $35/hr tracking, 10-hour Block Deal $230 (save $120), Mix $150, Master $75, bundles, late-night rate $28/hr. No hidden fees. Book online."
+  path="/pricing"
+>
+  <section class="section" style="padding-top:110px">
+    <div class="container">
+      <p class="kicker mono accent">Rates · No surprises</p>
+      <h1 class="display" style="font-size:clamp(2.6rem,7vw,5rem)">Straight<br/><span class="accent">pricing.</span></h1>
+      <p class="hero-sub mt-16" style="max-width:52ch">Every number on this page is the number you pay. Deposit comes off your total. Balance at the session. No “studio fees,” no parking fees, no surprise invoices.</p>
+
+      <div class="table-wrap mt-32">
+        <table class="rate-table">
+          <thead><tr><th scope="col">Session</th><th scope="col">What’s included</th><th scope="col">Rate</th><th scope="col"><span class="sr-only">Book</span></th></tr></thead>
+          <tbody>
+            {offers.map((o) => (
+              <tr>
+                <th scope="row" style="font-weight:700">{o.name}<br/><span class="mono" style="font-size:10px; color:var(--text-dim)">{o.note}</span></th>
+                <td class="text-dim">{o.detail}</td>
+                <td class="price-cell">{o.price}</td>
+                <td class="rate-row-cta"><a class="btn btn-ghost btn-sm" href={o.cta} data-track="cta_click" data-location="pricing-table">{o.label} <span class="arrow">→</span></a></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-2 mt-32" style="align-items:start">
+        <div class="panel">
+          <p class="kicker mono accent" style="margin-bottom:14px">Add-ons</p>
+          <ul class="price-list" style="gap:12px">
+            {addons.map(([name, price]) => (
+              <li style="justify-content:space-between; gap:16px"><span>{name}</span><span class="price-cell" style="white-space:nowrap">{price}</span></li>
+            ))}
+          </ul>
+        </div>
+        <div class="panel">
+          <p class="kicker mono accent" style="margin-bottom:14px">Which package?</p>
+          <div style="display:grid; gap:14px; font-size:15px; color:var(--text-dim)">
+            <p><b style="color:var(--text)">“I just need 2 hooks and a verse done.”</b><br/>Hourly. Two hours, in and out, files by midnight.</p>
+            <p><b style="color:var(--text)">“I’m cutting a whole project this month.”</b><br/>Block Deal. Ten hours for ${PRICING.blockPrice}, split however you want, priority weekends.</p>
+            <p><b style="color:var(--text)">“I’ve got rough vocals, they need to sound expensive.”</b><br/>Mix &amp; Master bundle, ${PRICING.mixMasterPrice}. Stems in, record out.</p>
+            <p><b style="color:var(--text)">“I’m on a budget but need it done right.”</b><br/>First session? Code <b class="accent">FIRST</b> = $25 off. Or come after 11PM at ${PRICING.lateNightRate}/hr.</p>
+          </div>
+          <a class="btn btn-accent mt-24" href="/book" data-track="cta_click" data-location="pricing-guide" style="justify-content:center">Get my quote <span class="arrow">→</span></a>
+        </div>
+      </div>
+
+      <p class="microcopy mt-32">Prices include engineer + outboard chain · Portable hard-drive handoff included on block deals · Cancel/reschedule free ≥ 24h before · Deposit forfeited within 24h or on no-show · *Block hours valid 6 months from first use · Students get $5/hr off with a valid ID, Tue–Thu before 6PM</p>
+    </div>
+  </section>
+</BaseLayout>

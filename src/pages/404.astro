@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="404 — You took a wrong turn | The Signal Room" description="This page skipped like a scratched CD. Find your way back to the room." path="/404">
+  <section class="lost">
+    <div>
+      <p class="mono" style="color:var(--accent)">ERR · 404</p>
+      <h1 class="display" style="font-size:clamp(3rem,12vw,7rem); margin:12px 0">Wrong<br/>turn.</h1>
+      <p class="text-dim" style="max-width:36ch; margin:0 auto">That page bounced. The studio’s right where you left it though.</p>
+      <div class="hero-ctas mt-24" style="justify-content:center">
+        <a class="btn btn-accent" href="/">Back to the room <span class="arrow">→</span></a>
+        <a class="btn btn-ghost" href="/book">Book a session</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

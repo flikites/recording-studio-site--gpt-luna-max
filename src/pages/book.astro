@@ -1,0 +1,202 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, PRICING, ENGINEERS } from '../data/site';
+const stripeLink = import.meta.env.PUBLIC_STRIPE_PAYMENT_LINK ?? '';
+---
+<BaseLayout
+  title="Book a Session | The Signal Room — Rap Recording Studio Pompano Beach"
+  description="Pick a time, pay a $50 deposit, show up and record. Apple Pay, Google Pay or card. No account. Free reschedule up to 24h. Live availability."
+  path="/book"
+  bodyClass="page-book"
+>
+  <div class="container">
+    <div class="book-layout" id="bookingWizard">
+
+      <!-- LEFT: wizard -->
+      <div>
+        <p class="kicker mono accent" style="margin-top:0">Book · Deposit from $50</p>
+        <h1 class="display" style="font-size:clamp(2.4rem,6vw,4.5rem)">Lock in<br/>the <span class="accent">room.</span></h1>
+        <p class="mono mt-8" id="stepLabel" aria-live="polite">Step 1 of 3</p>
+
+        <div class="progress mt-16" aria-hidden="true">
+          <div class="bar"><i style="--fill:1"></i></div>
+          <div class="bar"><i style="--fill:0"></i></div>
+          <div class="bar"><i style="--fill:0"></i></div>
+        </div>
+        <div class="step-dots mt-8" aria-hidden="true">
+          <strong class="mono" aria-current="true">1 · Choose</strong>
+          <strong class="mono" aria-current="false">2 · Time</strong>
+          <strong class="mono" aria-current="false">3 · Deposit</strong>
+        </div>
+
+        <!-- STEP 1 -->
+        <fieldset class="wizard-step active" data-step="1" style="border:0; padding:0; margin:0">
+          <legend class="mono" style="margin-bottom:12px">① Choose your session</legend>
+          <div class="option-grid" role="radiogroup" aria-label="Session type">
+            <label class="option-card">
+              <input type="radio" name="session" value="hourly" checked />
+              <span class="mono">Hourly</span>
+              <span class="oc-price" style="display:block">${PRICING.hourlyRate}/hr</span>
+              <p>2-hour minimum. After 11PM: ${PRICING.lateNightRate}/hr. Flexible in and out.</p>
+            </label>
+            <label class="option-card">
+              <span class="tag" style="top:-11px">Most Booked</span>
+              <input type="radio" name="session" value="block" />
+              <span class="mono">Block · 10 hrs</span>
+              <span class="oc-price" style="display:block">${PRICING.blockPrice}<small style="font-size:.45em; color:var(--text-dim)"> total</small></span>
+              <p>Save ${PRICING.blockSave}. Priority weekends, hours never expire within 6 months.</p>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="session" value="mix" />
+              <span class="mono">Mix &amp; Master</span>
+              <span class="oc-price" style="display:block">${PRICING.mixMasterPrice}<small style="font-size:.45em; color:var(--text-dim)">/song</small></span>
+              <p>Stems in, platform-loud master out. 2 revision rounds, 2–5 day turnaround.</p>
+            </label>
+          </div>
+
+          <div class="grid-2 mt-16" id="hoursRow" style="grid-template-columns:1fr 1fr">
+            <div class="field" style="margin:0">
+              <label for="hoursSelect">Hours</label>
+              <select id="hoursSelect" name="hours">
+                {[2,3,4,5,6,8,10].map(h => <option value={h} selected={h === 2}>{h} hours{h === 2 ? ' (min)' : ''}</option>)}
+              </select>
+            </div>
+            <div class="field" style="margin:0">
+              <label for="engineerSelect">Engineer</label>
+              <select id="engineerSelect" name="engineer">
+                <option value="any" selected>Any available (fastest)</option>
+                {ENGINEERS.map(e => <option value={e.id}>{e.name.split('·')[0].trim()}</option>)}
+              </select>
+            </div>
+          </div>
+          <p class="microcopy mt-8" id="lateNightNote" hidden style="color:var(--accent)">Late-night rate applied · ${PRICING.lateNightRate}/hr after 11PM</p>
+
+          <div class="field mt-16" style="max-width:420px">
+            <label for="promoInput">Promo code (optional)</label>
+            <div style="display:flex; gap:8px">
+              <input id="promoInput" name="promo" type="text" placeholder="FIRST" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase" />
+              <button type="button" class="btn btn-ghost btn-sm" id="promoApply" style="min-height:50px">Apply</button>
+            </div>
+            <span class="mono" id="promoApplied" style="color:var(--accent); font-size:11px"></span>
+          </div>
+
+          <button type="button" class="btn btn-accent mt-16" id="toStep2">Continue — pick a time <span class="arrow">→</span></button>
+        </fieldset>
+
+        <!-- STEP 2 -->
+        <fieldset class="wizard-step" data-step="2" style="border:0; padding:0; margin:0">
+          <legend class="mono" style="margin-bottom:12px">② Pick a time</legend>
+          <p class="mono" style="margin-bottom:6px">Next open — tap to grab it</p>
+          <div class="chips" id="quickPicks" role="group" aria-label="Quick pick times"></div>
+
+          <p class="mono mt-16" style="margin-bottom:6px">Or browse the next 2 weeks</p>
+          <div class="chips" id="dayScroller" role="group" aria-label="Choose a day" style="flex-wrap:nowrap; overflow-x:auto; scroll-snap-type:x proximity; padding-bottom:6px"></div>
+          <div class="slot-grid mt-8" id="slotGrid" role="group" aria-label="Available start times"></div>
+          <p class="mono mt-8" id="slotHint" role="alert" style="color:var(--hot)"></p>
+
+          <div class="mt-16" style="display:flex; gap:14px; align-items:center">
+            <button type="button" class="btn btn-ghost btn-sm" id="backTo1">← Back</button>
+            <button type="button" class="btn btn-accent" id="toStep3">Continue — your details <span class="arrow">→</span></button>
+          </div>
+        </fieldset>
+
+        <!-- STEP 3 -->
+        <form class="wizard-step" data-step="3" id="detailsForm" novalidate style="border:0; padding:0; margin:0">
+          <p class="mono" style="margin-bottom:12px">③ Details &amp; deposit</p>
+          <div class="grid-2" style="grid-template-columns:1fr 1fr">
+            <div class="field" id="fieldName">
+              <label for="fName">Name *</label>
+              <input id="fName" name="name" type="text" autocomplete="name" required />
+              <span class="error">Give us at least your first name.</span>
+            </div>
+            <div class="field" id="fieldPhone">
+              <label for="fPhone">Phone *</label>
+              <input id="fPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(954) 555-0000" required />
+              <span class="error">Enter a valid phone — we text the address + door code.</span>
+            </div>
+          </div>
+          <div class="grid-2" style="grid-template-columns:1.4fr 1fr">
+            <div class="field" id="fieldEmail">
+              <label for="fEmail">Email *</label>
+              <input id="fEmail" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required />
+              <span class="error">That email doesn’t look right.</span>
+            </div>
+            <div class="field">
+              <label for="fPeople">People in room</label>
+              <select id="fPeople" name="people">
+                {[1,2,3,4,5,6].map(n => <option value={n} selected={n === 1}>{n} {n === 1 ? 'person' : 'people'}</option>)}
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="fNotes">What are you working on? <span style="opacity:.6">(optional)</span></label>
+            <textarea id="fNotes" name="notes" placeholder="“Two records for my project, need hooks stacked and a rough mix before Friday…”"></textarea>
+          </div>
+          <label style="display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--text-dim); margin-bottom:6px; cursor:pointer">
+            <input type="checkbox" id="fConsent" checked style="width:20px; height:20px; accent-color:var(--accent); margin-top:2px" />
+            <span>Text me booking updates, the door code and a receipt. (One-time setup, no marketing lists.)</span>
+          </label>
+          <p class="waiver">By paying the deposit you agree to our <a href="/terms" style="color:var(--text)">terms</a> and <a href="/faq#payment" style="color:var(--text)">reschedule policy</a>: free changes up to 24h before · deposit forfeited on no-show · balance due at the session.</p>
+
+          <div class="mt-16" style="display:flex; gap:14px; align-items:center; flex-wrap:wrap">
+            <button type="button" class="btn btn-ghost btn-sm" id="backTo2">← Back</button>
+            <button type="submit" class="btn btn-accent" id="payBtn" style="min-width:240px; justify-content:center">
+              Pay <span id="depositDue" style="margin-inline:6px">$50 due now</span> <span class="arrow">→</span>
+            </button>
+          </div>
+          <p class="microcopy mt-8">Apple Pay · Google Pay · Card — via Stripe · No account · 60 seconds</p>
+          <p class="text-fallback">Prefer to text? <a href={SITE.smsHref}>{SITE.phone}</a> · or DM <a href={SITE.instagram} rel="noopener">{SITE.instagramHandle}</a> — a human answers.</p>
+        </form>
+
+        <!-- CONFIRMATION -->
+        <div id="confirmPanel" class="panel confirm-panel" hidden aria-live="polite">
+          <div class="confirm-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg></div>
+          <h2 class="display" style="font-size:clamp(1.8rem,4vw,3rem)">Locked in.</h2>
+          <p class="mono mt-8" style="color:var(--accent)">REF · <span id="confirmRef">SR-0000</span></p>
+          <p class="mt-16" style="font-size:19px; font-weight:700"><span id="confirmWhen">Friday · 9:00 PM</span></p>
+          <p class="text-dim mt-8">We’re sending the address, door code and a what-to-bring list to <b id="confirmEmail">you@example.com</b> and <b id="confirmPhone">(954) 555-0000</b>.</p>
+          <p class="mono mt-16" style="font-size:11px"><span id="confirmBalance">Balance at the studio · Ref</span></p>
+          <div class="hero-ctas mt-24" style="justify-content:center">
+            <button type="button" class="btn btn-ghost" id="downloadIcs">Add to Calendar (.ics)</button>
+            <a class="btn btn-accent" href="/">Done <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: sticky summary -->
+      <aside class="summary-card" aria-label="Booking summary" id="preConfirm">
+        <p class="mono" style="color:var(--text)">Summary</p>
+        <div class="summary-row"><span>Session</span><b id="sumType">Hourly · 2 hrs</b></div>
+        <div class="summary-row"><span>Engineer</span><b id="sumEngineer">Any available engineer</b></div>
+        <div class="summary-row"><span>When</span><b id="sumWhen">Pick a time →</b></div>
+        <div class="summary-row"><span>Subtotal</span><b id="sumSubtotal">$70</b></div>
+        <div class="summary-row"><span>Promo</span><b id="sumPromoRow">—</b></div>
+        <div class="summary-total"><span class="mono">Total</span><span class="amount" id="sumTotal">$70</span></div>
+        <div class="summary-deposit">
+          <div><span class="mono" style="font-size:10px">Deposit due now</span><p style="font-size:11px; color:var(--text-dim); margin-top:3px" id="balanceNote">$20 balance at the studio</p></div>
+          <b id="sumDeposit">$50</b>
+        </div>
+        <ul class="price-list" style="font-size:13px; gap:8px">
+          <li>Free reschedule up to 24h before</li>
+          <li>Files delivered same day</li>
+          <li>You own your masters</li>
+        </ul>
+        <p class="text-fallback" style="border-top:1px solid var(--line)">Prefer to text?<br/><a href={SITE.smsHref}>{SITE.phone}</a><br/><span class="text-dim" style="font-size:12px">Available 10AM–2AM · {SITE.instagramHandle}</span></p>
+      </aside>
+    </div>
+  </div>
+
+  <script is:inline>
+    // Pre-select session type from ?session=
+    (function () {
+      try {
+        var s = new URLSearchParams(location.search).get('session');
+        if (s) {
+          var r = document.querySelector('input[name="session"][value="' + s + '"]');
+          if (r) r.checked = true;
+        }
+      } catch (e) { /* non-fatal */ }
+    })();
+    window.__STRIPE_LINK = {stripeLink ? JSON.stringify(stripeLink) : 'null'};
+  </script>
+</BaseLayout>

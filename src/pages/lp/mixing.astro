@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE, REVIEWS, PRICING, TRACKS } from '../../data/site';
+---
+<BaseLayout
+  title="Your Mix Is the Difference | The Signal Room — Mix & Master"
+  description="Rough vocals in, radio record out. Mix $150, Master $75, both $199/song. 2 revision rounds, 2–5 day turnaround, platform-loud masters. Send stems today."
+  path="/lp/mixing"
+>
+  <div class="offer-strip">Mix &amp; Master · stems in → record out · 2–5 day turnaround · 2 revision rounds included</div>
+  <section class="section" style="padding-top:96px; padding-bottom:64px">
+    <div class="container">
+      <div class="split">
+        <div>
+          <p class="kicker mono accent">Mix &amp; Master</p>
+          <h1 class="display" style="font-size:clamp(2.6rem,8vw,5.5rem)">Your mix is<br/>the <span class="accent">difference.</span></h1>
+          <p class="hero-sub mt-16" style="max-width:44ch">You already recorded the record. We turn the raw comp pass into the version you play loud in the car — 808 translation, vocal presence, air, loudness to platform specs.</p>
+          <ul class="price-list mt-16" style="max-width:44ch">
+            <li>Mix ${PRICING.mixPrice} or Mix+Master ${PRICING.mixMasterPrice} per song</li>
+            <li>Two revision rounds — notes within 48h, delivered 2–5 days</li>
+            <li>Stems in → WAV + MP3 out, plus a 16-bit/44.1 reference</li>
+          </ul>
+          <div class="hero-ctas mt-24">
+            <a class="btn btn-accent pulse-glow" href="/book?session=mix&offer=first" data-track="cta_click" data-location="lp-mixing" style="min-height:60px; font-size:17px">Send my stems <span class="arrow">→</span></a>
+            <a class="btn btn-ghost" href={`mailto:${SITE.email}`}>Email the engineer</a>
+          </div>
+          <p class="microcopy mt-8">Deposit 50% ($100) · balance on delivery · you own the master, forever</p>
+        </div>
+        <div class="ba-grid" style="grid-template-columns:1fr">
+          {TRACKS.slice(0, 2).map((t) => (
+            <article class="ba-card" data-before={`/audio/${t.id}-raw.mp3`} data-after={`/audio/${t.id}-mix.mp3`} data-title={`Mix · ${t.title}`}>
+              <div class="ba-top">
+                <div><h3 class="ba-title">{t.title}</h3><p class="ba-artist">{t.artist} · mixed by Deja Price</p></div>
+                <div class="ba-toggle" role="group" aria-label={`Raw vs mixed for ${t.title}`}>
+                  <button type="button" data-mode="raw" aria-pressed="false">Raw</button>
+                  <button type="button" data-mode="mix" aria-pressed="true">Mixed</button>
+                </div>
+              </div>
+              <div class="wave-wrap" aria-hidden="true"><div class="wave-bars wave-base"></div><div class="wave-fill"><div class="wave-bars"></div></div></div>
+              <div class="ba-controller">
+                <button class="play-btn" type="button" aria-label={`Play ${t.title}`}>
+                  <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.1v13.8c0 1.1 1.2 1.8 2.2 1.2l10.8-6.9c.9-.5.9-1.9 0-2.4L10.2 3.9C9.2 3.3 8 4 8 5.1z"/></svg>
+                  <svg class="icon-pause" viewBox="0 0 24 24" hidden aria-hidden="true"><rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/></svg>
+                </button>
+                <span class="ba-time">0:00 / 0:36</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="review-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+        {REVIEWS.slice(2, 4).map((r) => (
+          <blockquote class="review"><span class="stars">★★★★★</span><p>{r.text}</p><footer><span class="avatar">{r.initials}</span><span><cite>{r.name}</cite><span>{r.handle} · {r.track}</span></span></footer></blockquote>
+        ))}
+      </div>
+      <div class="mt-32 center">
+        <a class="btn btn-accent" href="/book?session=mix" data-track="cta_click" data-location="lp-mixing-bottom">Start my mix <span class="arrow">→</span></a>
+        <p class="microcopy mt-8">Or text us stems first: {SITE.phone}</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://thesignalroomstudio.com/sitemap-index.xml

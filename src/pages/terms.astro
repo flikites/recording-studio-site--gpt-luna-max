@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../data/site';
+---
+<BaseLayout title="Terms | The Signal Room" description="Session terms: deposits, rescheduling, ownership of your masters, file delivery and house rules." path="/terms">
+  <section class="section" style="padding-top:110px">
+    <div class="container" style="max-width:820px">
+      <p class="kicker mono accent">Terms</p>
+      <h1 class="display" style="font-size:clamp(2rem,5vw,3.5rem)">The fine print,<br/><span class="accent">in plain words.</span></h1>
+      <div class="mt-32" style="display:grid; gap:26px; color:var(--text-dim); font-size:16px">
+        <div><h2 style="color:var(--text); font-size:19px; margin-bottom:6px">1. Deposits &amp; payment</h2><p>Recording sessions require a ${50} deposit; mix &amp; master takes 50% ($100). Deposits apply to your final balance. Payment accepted via Stripe (Apple Pay, Google Pay, card) or Zelle for block bookings made by text.</p></div>
+        <div><h2 style="color:var(--text); font-size:19px; margin-bottom:6px">2. Reschedule &amp; cancellation</h2><p>Free reschedule up to 24 hours before your session by text or DM. Within 24 hours we will try to move you once if availability allows; the deposit is otherwise forfeited. No-shows forfeit the deposit.</p></div>
+        <div><h2 style="color:var(--text); font-size:19px; margin-bottom:6px">3. Ownership</h2><p>You own your masters — always. The Signal Room retains no rights to your recordings. We may reference your track in in-studio conversation and credit lists only with your explicit permission.</p></div>
+        <div><h2 style="color:var(--text); font-size:19px; margin-bottom:6px">4. File delivery</h2><p>Roughs and raws are delivered same day when booked with tracking. Mix/master delivery within 2–5 business days. Cloud links remain active for 90 days — download and back up your files.</p></div>
+        <div><h2 style="color:var(--text); font-size:19px; margin-bottom:6px">5. House rules</h2><p>Max 6 people in the room. Food and drinks welcome outside the console area. No glass near gear. Respect the room, the engineers and each other — or the session ends and the deposit is forfeited.</p></div>
+        <div><h2 style="color:var(--text); font-size:19px; margin-bottom:6px">6. Liability</h2><p>Bring your own backups — we are not liable for lost project files we did not create. We carry studio liability insurance; your personal gear is your responsibility.</p></div>
+        <p class="mono" style="font-size:11px">Questions: {SITE.phone} · {SITE.email}</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

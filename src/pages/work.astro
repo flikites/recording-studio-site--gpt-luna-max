@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, TRACKS } from '../data/site';
+
+const tiles = [
+  ...TRACKS.map(t => ({ ...t, src: `/audio/${t.id}-mix.mp3` })),
+  { id: 'pressure-raw', title: 'Pressure — raw comp pass', artist: 'Rio Pharaoh', engineer: 'Marcus "Blade" Bell', kind: 'Raw vocals (before the mix)', hue: 8, cat: ['recorded'], src: '/audio/pressure-raw.mp3' },
+  { id: 'no-ceilings-raw', title: 'No Ceilings — raw comp pass', artist: 'Kaze', engineer: 'Marcus "Blade" Bell', kind: 'Raw vocals (before the mix)', hue: 74, cat: ['recorded'], src: '/audio/no-ceilings-raw.mp3' },
+  { id: 'midnight-raw', title: 'Midnight in Pompano — raw', artist: 'Mali Lateef', engineer: 'Deja Price', kind: 'Raw vocals (before the mix)', hue: 265, cat: ['mixed'], src: '/audio/midnight-in-pompano-raw.mp3' },
+];
+---
+<BaseLayout
+  title="The Work | Rap Recorded, Mixed & Mastered — The Signal Room"
+  description="Hear recent tracks tracked, mixed and mastered at The Signal Room: rap, trap, drill and melodic records. Filter by recorded / mixed / mastered."
+  path="/work"
+>
+  <section class="section" style="padding-top:110px">
+    <div class="container">
+      <p class="kicker mono accent">The Work</p>
+      <h1 class="display" style="font-size:clamp(2.6rem,7vw,5rem)">Straight off<br/>the <span class="accent">hard drive.</span></h1>
+      <p class="hero-sub mt-16" style="max-width:52ch">Every clip plays preloaded-nothing. Tap play — the room does the talking. Credits under each track; streaming links live on our <a href={SITE.instagram} rel="noopener" style="color:var(--accent)">IG</a>.</p>
+
+      <div class="work-filters mt-32" role="group" aria-label="Filter work" id="workFilters">
+        <button class="chip" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" data-filter="recorded" aria-pressed="false">Recorded</button>
+        <button class="chip" data-filter="mixed" aria-pressed="false">Mixed</button>
+        <button class="chip" data-filter="mastered" aria-pressed="false">Mastered</button>
+      </div>
+
+      <div class="work-grid" id="workGrid">
+        {tiles.map((t, i) => (
+          <article class="work-tile reveal" data-src={t.src} data-cat={t.cat.join(' ')} style={`--hue:${t.hue}`}>
+            <div class="work-art">
+              <span class="mono">TRK-{String(i + 1).padStart(3, '0')}</span>
+              <button class="work-play" type="button" aria-label={`Play ${t.title} by ${t.artist}`}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.1v13.8c0 1.1 1.2 1.8 2.2 1.2l10.8-6.9c.9-.5.9-1.9 0-2.4L10.2 3.9C9.2 3.3 8 4 8 5.1z"/></svg>
+              </button>
+            </div>
+            <div class="work-body">
+              <b>{t.title}</b>
+              <span>{t.artist}</span>
+              <span style="color:var(--text-dim)">{t.kind}</span>
+              <span style="color:var(--accent)">Eng: {t.engineer.split('·')[0]}</span>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="mono mt-24" style="color:var(--text-dim)">Showing all {tiles.length} recent sessions · want yours here? <a href="/book" style="color:var(--accent)">Book the room →</a></p>
+    </div>
+  </section>
+
+  <section class="final-cta" aria-labelledby="work-cta">
+    <h2 class="display" id="work-cta" style="font-size:clamp(2.2rem,7vw,5rem)">Your record<br/>goes <span class="accent">next.</span></h2>
+    <div class="hero-ctas mt-24" style="justify-content:center">
+      <a class="btn btn-accent" href="/book" data-track="cta_click" data-location="work-final">Book a Session <span class="arrow">→</span></a>
+    </div>
+  </section>
+
+  <script is:inline>
+    // Work grid filter — tiny, no dependencies
+    (function () {
+      var grid = document.getElementById('workGrid');
+      var filters = document.getElementById('workFilters');
+      if (!grid || !filters) return;
+      filters.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-filter]');
+        if (!btn) return;
+        var f = btn.getAttribute('data-filter');
+        filters.querySelectorAll('[data-filter]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+        grid.querySelectorAll('.work-tile').forEach(function (tile) {
+          var cats = (tile.getAttribute('data-cat') || '').split(' ');
+          tile.style.display = f === 'all' || cats.indexOf(f) !== -1 ? '' : 'none';
+        });
+      });
+    })();
+  </script>
+</BaseLayout>
